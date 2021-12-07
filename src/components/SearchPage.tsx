@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, KeyboardEvent } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { MdSearch } from 'react-icons/md';
+
 
 import MovieList, { Movie } from './MovieList';
 
@@ -15,9 +17,15 @@ const TitleBar = styled.div`
   padding: 0;
 `;
 
-const Search = styled.input`
-  margin: 1rem 2rem;
+const SearchBar = styled.div`
   width: 100%;
+  margin: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+`;
+
+const SearchInput = styled.input`
+  width: calc(100% - 50px);
   border: 0;
   background-color: #800;
   padding: 0.5rem;
@@ -26,6 +34,13 @@ const Search = styled.input`
   &:focus {
     outline: 0 !important;
   }
+`;
+
+const SearchButton = styled.button`
+  background-color: #a00;
+  border: 0;
+  padding: 0.45rem;
+  color: white;
 `;
 
 const PlayListButton = styled.button`
@@ -42,9 +57,9 @@ const PlayListButton = styled.button`
   }
 `;
 
-const callForMovies = (keyword: string, page: number) => axios(`https://www.omdbapi.com/?s=${keyword}&apikey=${omdbApiKey}&page=${page}`)
-
 const SearchPage = () => {
+  const searchInput = useRef<HTMLInputElement>(null);
+
   const [search, setSearch] = useState<{ keyword: string, page: number }>({ keyword: 'aaa', page: 1 });
   const [movies, setMovies] = useState<Movie[]>([]);
   const [total, setTotal] = useState(0);
@@ -52,11 +67,21 @@ const SearchPage = () => {
   useEffect(() => {
     axios(`https://www.omdbapi.com/?s=${search.keyword}&apikey=${omdbApiKey}&page=${search.page}`)
       .then(({ data }) => {
-        console.log(data);
         setMovies(data.Search);
         setTotal(data.totalResults);
       });
   }, [search]);
+
+  const searchMovie = () => {
+    console.log();
+    setSearch({ keyword: (searchInput.current as HTMLInputElement)?.value, page: 1 })
+  };
+
+  const searchMovieByEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setSearch({ keyword: (e.target as HTMLInputElement).value, page: 1 })
+    }
+  };
 
   return (
       <>
@@ -64,7 +89,13 @@ const SearchPage = () => {
           <PlayListButton>
             My playlist
           </PlayListButton>
-          <Search />
+
+          <SearchBar>
+            <SearchInput ref={searchInput} onKeyPress={searchMovieByEnter} aria-label="Enter keyword" />
+            <SearchButton onClick={searchMovie} aria-label="Search">
+              <MdSearch />
+            </SearchButton>
+          </SearchBar>
         </TitleBar>
 
         <MovieList list={movies} />

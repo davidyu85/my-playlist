@@ -30,6 +30,10 @@ const MovieBlock = styled.div`
     width: 100%;
     height: auto;
   }
+
+  &:hover {
+    box-shadow: 0 0 1rem 1rem rgba(255, 0, 0, .3);
+  }
 `;
 
 const MovieTitle = styled.div`
@@ -40,17 +44,13 @@ const MovieTitle = styled.div`
   width: 100%;
   padding: 1rem;
   margin: 0;
-
-  &:hover {
-    box-shadow:
-  }
 `;
 
 const MovieList = ({ list = [] }: MovieListProps) => (
   <MovieListWrapper>
     {list.map((movie: Movie): ReactElement => (
       <MovieBlock key={movie.imdbID}>
-        {movie.Poster && <img src={movie.Poster} />}
+        {movie.Poster && <img src={movie.Poster} alt="" />}
         <MovieTitle>{movie.Title}</MovieTitle>
       </MovieBlock>
     ))}
