@@ -1,21 +1,12 @@
-import React, { useEffect, useState, useRef, KeyboardEvent } from 'react';
+import React, { useEffect, useState, useRef, KeyboardEvent, ReactElement } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { MdSearch } from 'react-icons/md';
 
-
+import { TitleBar, ScreenButton } from './TitleBar';
 import MovieList, { Movie } from './MovieList';
 
 const omdbApiKey = 'bce2b2d3';
-
-const TitleBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #500;
-  color: #fff;
-  padding: 0;
-`;
 
 const SearchBar = styled.div`
   width: 100%;
@@ -27,53 +18,53 @@ const SearchBar = styled.div`
 const SearchInput = styled.input`
   width: calc(100% - 50px);
   border: 0;
+  border-radius: 0;
   background-color: #800;
-  padding: 0.5rem;
+  padding: 0.5rem 0.2rem;
+  margin: 0;
   color: #fff;
 
   &:focus {
     outline: 0 !important;
   }
-`;
 
-const SearchButton = styled.button`
-  background-color: #a00;
-  border: 0;
-  padding: 0.45rem;
-  color: white;
-`;
-
-const PlayListButton = styled.button`
-  background-color: #a00;
-  color: white;
-  border: 0;
-  padding: 1.5rem;
-  width: 8rem;
-
-  &:hover,
-  &:focus {
-    background-color: #c00;
-    outline: 0 !important;
+  &::placeholder {
+    color: #c88;
   }
 `;
 
-const SearchPage = () => {
+const SearchButton = styled.button`
+  background-color: #800;
+  border: 0;
+  border-radius: 0;
+  padding: 0.2rem .5rem;
+  margin: 0;
+  color: white;
+`;
+
+const NoResult = styled.span`
+  color: #fff;
+  padding: 1rem;
+`;
+
+/**
+ * Page searching movies from OMDb.
+ * @returns ReactElement
+ */
+const SearchPage = (): ReactElement => {
   const searchInput = useRef<HTMLInputElement>(null);
 
   const [search, setSearch] = useState<{ keyword: string, page: number }>({ keyword: 'aaa', page: 1 });
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     axios(`https://www.omdbapi.com/?s=${search.keyword}&apikey=${omdbApiKey}&page=${search.page}`)
       .then(({ data }) => {
         setMovies(data.Search);
-        setTotal(data.totalResults);
       });
   }, [search]);
 
   const searchMovie = () => {
-    console.log();
     setSearch({ keyword: (searchInput.current as HTMLInputElement)?.value, page: 1 })
   };
 
@@ -86,19 +77,27 @@ const SearchPage = () => {
   return (
       <>
         <TitleBar>
-          <PlayListButton>
-            My playlist
-          </PlayListButton>
+          <ScreenButton>
+            Playlist
+          </ScreenButton>
 
           <SearchBar>
-            <SearchInput ref={searchInput} onKeyPress={searchMovieByEnter} aria-label="Enter keyword" />
             <SearchButton onClick={searchMovie} aria-label="Search">
-              <MdSearch />
+              <MdSearch size={21} />
             </SearchButton>
+            <SearchInput
+              ref={searchInput}
+              onKeyPress={searchMovieByEnter}
+              aria-label="Enter keyword"
+              placeholder="Enter keyword - minimum 3 characters"
+            />
           </SearchBar>
         </TitleBar>
 
         <MovieList list={movies} />
+
+        {movies && movies.length === 0 && <NoResult>Search no results.</NoResult>}
+        {search.keyword.length < 3 && <NoResult>Minimum 3 characters required for search to proceed.</NoResult>}
       </>
   );
 };

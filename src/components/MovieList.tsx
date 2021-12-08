@@ -1,20 +1,18 @@
 import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 
-interface MovieListProps {
-  list: Movie[];
-}
-
-export interface Movie {
-  [key: string]: string;
-}
 
 const MovieListWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   width: calc(100% - 4rem);
-  padding: 2rem;
+  padding: 5rem 1.5rem 1.5rem 1.5rem;
+
+  @media (min-width: 600px) {
+    justify-content: flex-start;
+  }
 `;
 
 const MovieBlock = styled.div`
@@ -22,9 +20,10 @@ const MovieBlock = styled.div`
   background-color: #333;
   color: #fff;
   margin: .75rem;
-  width: 200px;
-  height: 280px;
+  width: 12rem;
+  height: 17rem;
   overflow: hidden;
+  text-align: left;
 
   img {
     width: 100%;
@@ -41,12 +40,26 @@ const MovieTitle = styled.div`
   bottom: 0;
 
   background-color: rgba(40, 0, 0, .75);
-  width: 100%;
+  width: 10rem;
   padding: 1rem;
   margin: 0;
 `;
+export interface Movie {
+  // List of properties from OMDb API.
+  // TODO: This should be listed out or find an already provided version.
+  [key: string]: string;
+}
+interface MovieListProps {
+  // Array of "Search" object from OMDb.
+  list: Movie[];
+}
 
-const MovieList = ({ list = [] }: MovieListProps) => (
+/**
+ * Show the list of movies.
+ * @param MovieListProps
+ * @returns ReactElement
+ */
+const MovieList = ({ list = [] }: MovieListProps): ReactElement => (
   <MovieListWrapper>
     {list.map((movie: Movie): ReactElement => (
       <MovieBlock key={movie.imdbID}>

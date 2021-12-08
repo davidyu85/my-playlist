@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import SearchPage from './components/SearchPage';
 
-const myColor = 'orange';
+const myColor = 'maroon';
 
 const Footer = styled.div`
   position: fixed;
