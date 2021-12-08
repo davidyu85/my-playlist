@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import styled from 'styled-components';
 
 
@@ -52,6 +52,7 @@ export interface Movie {
 interface MovieListProps {
   // Array of "Search" object from OMDb.
   list: Movie[];
+  onClickMovieBlock?: (movie: Movie) => void;
 }
 
 /**
@@ -59,10 +60,10 @@ interface MovieListProps {
  * @param MovieListProps
  * @returns ReactElement
  */
-const MovieList = ({ list = [] }: MovieListProps): ReactElement => (
+const MovieList = ({ list = [], onClickMovieBlock = () => {} }: MovieListProps): ReactElement => (
   <MovieListWrapper>
     {list.map((movie: Movie): ReactElement => (
-      <MovieBlock key={movie.imdbID}>
+      <MovieBlock key={movie.imdbID} onClick={() => onClickMovieBlock(movie)}>
         {movie.Poster && <img src={movie.Poster} alt="" />}
         <MovieTitle>{movie.Title}</MovieTitle>
       </MovieBlock>

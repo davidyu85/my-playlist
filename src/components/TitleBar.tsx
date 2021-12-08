@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 export const TitleBar = styled.div`
   position: fixed;
@@ -12,13 +13,13 @@ export const TitleBar = styled.div`
   z-index: 100;
 `;
 
-export const ScreenButton = styled.button`
+export const ScreenButton = styled(NavLink)`
   background-color: #a00;
   color: white;
-  border: 0;
-  border-radius: 0;
   padding: 1.5rem 1rem;
   width: 6rem;
+  text-align: center;
+  text-decoration: none;
 
   &:hover,
   &:focus {

@@ -1,8 +1,11 @@
-import React from 'react';
+import { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { Routes, Route } from "react-router-dom";
 
+import { Movie } from './components/MovieList';
 import SearchPage from './components/SearchPage';
+import PlayListPage from './components/PlayListPage';
+import { ContextPlayList } from './Contexts';
 
 const myColor = 'maroon';
 
@@ -18,15 +21,19 @@ const Footer = styled.div`
 `;
 
 function App() {
+  const [playList, setPlayList] = useState<Record<string, Movie>>({});
+  const contextValuePlayList = useMemo(() => ({ playList, setPlayList }), [playList]);
+
   return (
-    <>
+    <ContextPlayList.Provider value={contextValuePlayList}>
       <Routes>
         <Route path="/" element={<SearchPage />} />
+        <Route path="/playlist" element={<PlayListPage />} />
       </Routes>
       <Footer>
         My favorite color is {myColor}.
       </Footer>
-    </>
+    </ContextPlayList.Provider>
   );
 }
 

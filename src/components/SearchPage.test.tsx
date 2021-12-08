@@ -1,5 +1,5 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { HashRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event'
 
 import SearchPage from './SearchPage';
@@ -9,14 +9,20 @@ import SearchPage from './SearchPage';
 
 // Still, usually I would mock apis for testing performance - this is not E2E after all.
 
+const layout = (
+  <HashRouter>
+    <SearchPage />
+  </HashRouter>
+)
+
 describe('SearchPage', () => {
   test('renders default results on mount', async () => {
-    render(<SearchPage />);
+    render(layout);
     expect(await screen.findByText('AAA When Worlds Collide')).toBeVisible();
   });
 
   test('search is triggerable by pressing enter', async () => {
-    render(<SearchPage />);
+    render(layout);
     expect(await screen.findByText('AAA When Worlds Collide')).toBeVisible();
 
     userEvent.type(screen.getByLabelText('Enter keyword'), 'bbb{enter}');
@@ -24,7 +30,7 @@ describe('SearchPage', () => {
   });
 
   test('search is triggerable by clicking search button', async () => {
-    render(<SearchPage />);
+    render(layout);
     expect(await screen.findByText('AAA When Worlds Collide')).toBeVisible();
 
     userEvent.type(screen.getByLabelText('Enter keyword'), 'bbb');

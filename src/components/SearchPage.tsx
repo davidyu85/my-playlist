@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef, KeyboardEvent, ReactElement } from 'react';
+import { useEffect, useState, useRef, useContext, KeyboardEvent, ReactElement } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { MdSearch } from 'react-icons/md';
 
 import { TitleBar, ScreenButton } from './TitleBar';
 import MovieList, { Movie } from './MovieList';
+import { ContextPlayList } from '../Contexts';
 
 const omdbApiKey = 'bce2b2d3';
 
@@ -57,6 +58,8 @@ const SearchPage = (): ReactElement => {
   const [search, setSearch] = useState<{ keyword: string, page: number }>({ keyword: 'aaa', page: 1 });
   const [movies, setMovies] = useState<Movie[]>([]);
 
+  const { playList, setPlayList } = useContext(ContextPlayList);
+
   useEffect(() => {
     axios(`https://www.omdbapi.com/?s=${search.keyword}&apikey=${omdbApiKey}&page=${search.page}`)
       .then(({ data }) => {
@@ -74,10 +77,20 @@ const SearchPage = (): ReactElement => {
     }
   };
 
+  const toggleToPlaylist = (movie: Movie) => {
+    const newPlayList = playList;
+    if (newPlayList[movie.imdbID]) {
+      delete newPlayList[movie.imdbID];
+    } else {
+      newPlayList[movie.imdbID] = movie;
+    }
+    setPlayList(newPlayList);
+  }
+
   return (
       <>
         <TitleBar>
-          <ScreenButton>
+          <ScreenButton to="playlist">
             Playlist
           </ScreenButton>
 
@@ -94,7 +107,7 @@ const SearchPage = (): ReactElement => {
           </SearchBar>
         </TitleBar>
 
-        <MovieList list={movies} />
+        <MovieList list={movies} onClickMovieBlock={toggleToPlaylist} />
 
         {movies && movies.length === 0 && <NoResult>Search no results.</NoResult>}
         {search.keyword.length < 3 && <NoResult>Minimum 3 characters required for search to proceed.</NoResult>}
