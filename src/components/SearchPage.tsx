@@ -78,7 +78,7 @@ const SearchPage = (): ReactElement => {
   };
 
   const toggleToPlaylist = (movie: Movie) => {
-    const newPlayList = playList;
+    const newPlayList = { ...playList};
     if (newPlayList[movie.imdbID]) {
       delete newPlayList[movie.imdbID];
     } else {

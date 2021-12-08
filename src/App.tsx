@@ -28,7 +28,7 @@ function App() {
     <ContextPlayList.Provider value={contextValuePlayList}>
       <Routes>
         <Route path="/" element={<SearchPage />} />
-        <Route path="/playlist" element={<PlayListPage />} />
+        <Route path="/playlist" element={<PlayListPage bgColor={myColor} />} />
       </Routes>
       <Footer>
         My favorite color is {myColor}.

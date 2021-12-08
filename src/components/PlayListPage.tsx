@@ -17,6 +17,7 @@ const Heading = styled.h3`
 
 const Wrapper = styled.div`
   background-color: ${(props: PlayListPageProps) => props.bgColor || '#000'};
+  height: 100vh;
 `
 
 interface PlayListPageProps {
