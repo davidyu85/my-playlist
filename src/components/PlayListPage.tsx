@@ -15,9 +15,11 @@ const Heading = styled.h3`
   font-weight: 400;
 `;
 
-const Wrapper = styled.div`
+const Background = styled.div`
+  position: fixed;
   background-color: ${(props: PlayListPageProps) => props.bgColor || '#000'};
   height: 100vh;
+  width: 100vw;
 `
 
 interface PlayListPageProps {
@@ -35,18 +37,19 @@ const PlayListPage = ({ bgColor }: PlayListPageProps): ReactElement => {
   const playListObjToArray = Object.values(playList);
 
   return (
-    <Wrapper bgColor={bgColor}>
+    <>
       <TitleBar>
         <ScreenButton to="/">
           Search
         </ScreenButton>
         <Heading>My playlist</Heading>
       </TitleBar>
+      <Background bgColor={bgColor} />
 
       <MovieList list={playListObjToArray} />
 
       {playListObjToArray.length === 0 && <NoList>Playlist is empty</NoList>}
-    </Wrapper>
+    </>
   );
 };
 
