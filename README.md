@@ -19,7 +19,7 @@ The most difficult is to get the design right that suits for mobile. Generally s
 
 **Did you learn anything new while completing this assignment?**
 
-Writing some test even for small applications and get it to run side by side inside Vscode, can already benefit the development process. I have captured so many breakages during the implementation and able to fix them up immediately without having to switch to the browser.
+Writing some test even for small applications and get it to run side by side inside Vscode, can already benefit the development process. I have captured so many breakages throughout the implementation and are able to fix them up immediately without having to switch to the browser.
 
 Fun fact: I accidentally discovered that Jest testing on api calls, actually does make a legit call and works without having to mock, which is interesting. Not saying that this is the pattern I will be using for any future work, but it is an interesting finding for me and saves me time not having to write a mock.
 
@@ -33,8 +33,12 @@ I ran out of time adding a few test on the playlist.
 
 **How could the application to be improved?**
 
-A server-side data state management library would be beneficial for this application if it is going to be in full-scale development. Some out-of-the-box solutions like React Query would be useful for managing re-fetching, caching and garbage collection, which in a long run, making this application high performing.
+A server-side data state management library would be beneficial for this application if it is going to be in full-scale development. Some out-of-the-box solutions like React Query would be useful for managing re-fetching, caching and garbage collection, which in a long run, making this application to be perceived as high performing due to cached data is available with decent re-fetching capability.
 
 HashRouter is set up in this applications due to BrowserRouter does not function well in GitHub pages. In real world implementation, BrowserRouter usually would be preferable over HashRouter.
 
-The current Jest test gets Axios do the legit api call to OMDb, although saves test-writing time (because I don't have to mock anything), it does make the test less performant. Relying on real api calls similar to E2E testing, may also result test to be more flaky, although it is not perceivable in the test written here.
+The current Jest test gets Axios do the legit api call to OMDb, although saves test-writing time (because I don't have to mock anything), it does make the test less performant, making TDD less possible. Relying on real api calls similar to E2E testing, may also result test to be more flaky, although it is not perceivable in the test written here.
+
+Performance wise, I am aware that whenever a movie block is toggled, it triggers the re-render to the entire list of movie blocks. This is due to the way how React Context got hooked, when the data object updated, re-renders would be triggered to all connected components. In the current application, performance impact is neglectable due to OMDb restricts retrieving 10 entires per search. This would be problematic if the list becomes larger. This may be improved by making those component less tied up with React Context and offshore to component state solutions to minimise re-renders.
+
+React Window is also a good library for rendering optimisation, if infinite scrolling list is required.
